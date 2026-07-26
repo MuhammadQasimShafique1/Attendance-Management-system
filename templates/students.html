@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+Students
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>
+
+                👨‍🎓 Student Management
+
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <!-- ================= ADD STUDENT ================= -->
+
+            <form method="POST"
+                  action="{{ url_for('students') }}">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>
+
+                            Student Name
+
+                        </label>
+
+                        <input
+
+                            type="text"
+
+                            id="name"
+
+                            name="name"
+
+                            class="form-control"
+
+                            required>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>
+
+                            Roll Number
+
+                        </label>
+
+                        <input
+
+                            type="text"
+
+                            id="roll_no"
+
+                            name="roll_no"
+
+                            class="form-control"
+
+                            required>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>
+
+                            Department
+
+                        </label>
+
+                        <input
+
+                            type="text"
+
+                            id="department"
+
+                            name="department"
+
+                            class="form-control"
+
+                            required>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>
+
+                            Semester
+
+                        </label>
+
+                        <input
+
+                            type="text"
+
+                            id="semester"
+
+                            name="semester"
+
+                            class="form-control"
+
+                            required>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>
+
+                            Email
+
+                        </label>
+
+                        <input
+
+                            type="email"
+
+                            id="email"
+
+                            name="email"
+
+                            class="form-control">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>
+
+                            Phone
+
+                        </label>
+
+                        <input
+
+                            type="text"
+
+                            id="phone"
+
+                            name="phone"
+
+                            class="form-control">
+
+                    </div>
+
+                </div>
+
+                <button
+
+                    type="submit"
+
+                    class="btn btn-success">
+
+                    ➕ Add Student
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <!-- ================= SEARCH ================= -->
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            <input
+
+                type="text"
+
+                id="searchInput"
+
+                class="form-control"
+
+                placeholder="🔍 Search Student..."
+
+                onkeyup="searchStudent()">
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <!-- ================= STUDENT TABLE ================= -->
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+
+            Student List
+
+        </div>
+
+        <div class="card-body table-responsive">
+
+            <table
+
+                class="table table-bordered table-hover"
+
+                id="studentTable">
+
+                <thead class="table-primary">
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Name</th>
+
+                    <th>Roll No</th>
+
+                    <th>Department</th>
+
+                    <th>Semester</th>
+
+                    <th>Email</th>
+
+                    <th>Phone</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for student in students %}
+
+                <tr>
+
+                    <td>
+
+                        {{ student.id }}
+
+                    </td>
+
+                    <td>
+
+                        {{ student.name }}
+
+                    </td>
+
+                    <td>
+
+                        {{ student.roll_no }}
+
+                    </td>
+
+                    <td>
+
+                        {{ student.department }}
+
+                    </td>
+
+                    <td>
+
+                        {{ student.semester }}
+
+                    </td>
+
+                    <td>
+
+                        {{ student.email }}
+
+                    </td>
+
+                    <td>
+
+                        {{ student.phone }}
+
+                    </td>
+
+                    <td>
+
+                        <a
+
+                        href="#"
+
+                        class="btn btn-warning btn-sm">
+
+                        Edit
+
+                        </a>
+
+                        <a
+
+                        href="#"
+
+                        class="btn btn-danger btn-sm">
+
+                        Delete
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

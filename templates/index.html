@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+Home
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="text-center">
+
+        <h1 class="display-4 text-primary fw-bold">
+
+            🎓 Student Attendance System
+
+        </h1>
+
+        <p class="lead text-muted">
+
+            Professional Attendance Management System using Flask
+
+        </p>
+
+    </div>
+
+    <div class="row mt-5">
+
+        <div class="col-md-4">
+
+            <div class="card shadow text-center">
+
+                <div class="card-body">
+
+                    <h3>👨‍🎓</h3>
+
+                    <h4>Students</h4>
+
+                    <p>
+
+                        Add and manage students.
+
+                    </p>
+
+                    <a href="{{ url_for('students') }}"
+                       class="btn btn-primary">
+
+                        Open
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card shadow text-center">
+
+                <div class="card-body">
+
+                    <h3>📅</h3>
+
+                    <h4>Attendance</h4>
+
+                    <p>
+
+                        Mark daily attendance.
+
+                    </p>
+
+                    <a href="{{ url_for('attendance') }}"
+                       class="btn btn-success">
+
+                        Open
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card shadow text-center">
+
+                <div class="card-body">
+
+                    <h3>📊</h3>
+
+                    <h4>Reports</h4>
+
+                    <p>
+
+                        View attendance reports.
+
+                    </p>
+
+                    <a href="{{ url_for('report') }}"
+                       class="btn btn-warning">
+
+                        Open
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="text-center mt-5">
+
+        <a href="{{ url_for('login') }}"
+           class="btn btn-primary btn-lg">
+
+            Login
+
+        </a>
+
+        <a href="{{ url_for('register') }}"
+           class="btn btn-success btn-lg">
+
+            Register
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

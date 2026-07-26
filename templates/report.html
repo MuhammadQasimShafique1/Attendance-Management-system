@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance Report{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>📊 Attendance Report</h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <!-- Student Selection -->
+
+            <form method="POST" action="{{ url_for('report') }}">
+
+                <div class="row mb-4">
+
+                    <div class="col-md-8">
+
+                        <label class="form-label">
+
+                            Select Student
+
+                        </label>
+
+                        <select
+                            class="form-select"
+                            name="student_id"
+                            required>
+
+                            <option value="">
+
+                                -- Select Student --
+
+                            </option>
+
+                            {% for student in students %}
+
+                            <option value="{{ student.id }}">
+
+                                {{ student.roll_no }} - {{ student.name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-success w-100">
+
+                            🔍 Generate Report
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+            <hr>
+
+            <!-- Report Table -->
+
+            <div class="table-responsive">
+
+                <table
+                    class="table table-bordered table-hover">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Name</th>
+
+                            <th>Roll No</th>
+
+                            <th>Date</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% if attendance %}
+
+                            {% for row in attendance %}
+
+                            <tr>
+
+                                <td>{{ loop.index }}</td>
+
+                                <td>{{ row.name }}</td>
+
+                                <td>{{ row.roll_no }}</td>
+
+                                <td>{{ row.attendance_date }}</td>
+
+                                <td>
+
+                                    {% if row.status=="Present" %}
+
+                                        <span class="badge bg-success">
+
+                                            Present
+
+                                        </span>
+
+                                    {% elif row.status=="Absent" %}
+
+                                        <span class="badge bg-danger">
+
+                                            Absent
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-warning text-dark">
+
+                                            Leave
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td colspan="5" class="text-center">
+
+                                    No Attendance Record Found
+
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="text-end mt-3">
+
+                <button
+                    onclick="window.print()"
+                    class="btn btn-primary">
+
+                    🖨 Print Report
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <!-- Welcome Section -->
+
+    <div class="welcome-box fade-card mb-4">
+
+        <h2 class="dashboard-title">
+
+            👋 Welcome, {{ username }}
+
+        </h2>
+
+        <p class="dashboard-subtitle">
+
+            Student Attendance Management System
+
+        </p>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="row">
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card stat-card students-card fade-card">
+
+                <div class="card-body text-center">
+
+                    <h5>Total Students</h5>
+
+                    <h2>
+
+                        {{ total_students|default(0) }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card stat-card present-card fade-card">
+
+                <div class="card-body text-center">
+
+                    <h5>Present Today</h5>
+
+                    <h2>
+
+                        {{ present_today|default(0) }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card stat-card absent-card fade-card">
+
+                <div class="card-body text-center">
+
+                    <h5>Absent Today</h5>
+
+                    <h2>
+
+                        {{ absent_today|default(0) }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card stat-card leave-card fade-card">
+
+                <div class="card-body text-center">
+
+                    <h5>Leave</h5>
+
+                    <h2>
+
+                        {{ leave_today|default(0) }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Quick Menu -->
+
+    <div class="card shadow border-0 fade-card">
+
+        <div class="card-header bg-dark text-white">
+
+            <h4>
+
+                🚀 Quick Menu
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <div class="quick-card">
+
+                        <h1>👨‍🎓</h1>
+
+                        <h5>Students</h5>
+
+                        <a href="{{ url_for('students') }}"
+                           class="btn btn-primary">
+
+                            Open
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <div class="quick-card">
+
+                        <h1>📅</h1>
+
+                        <h5>Attendance</h5>
+
+                        <a href="{{ url_for('attendance') }}"
+                           class="btn btn-success">
+
+                            Open
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <div class="quick-card">
+
+                        <h1>📊</h1>
+
+                        <h5>Reports</h5>
+
+                        <a href="{{ url_for('report') }}"
+                           class="btn btn-warning">
+
+                            Open
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-3">
+
+                    <div class="quick-card">
+
+                        <h1>👤</h1>
+
+                        <h5>Profile</h5>
+
+                        <a href="{{ url_for('profile') }}"
+                           class="btn btn-secondary">
+
+                            Open
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Recent Attendance -->
+
+    <div class="card shadow border-0 mt-4 fade-card">
+
+        <div class="card-header bg-info text-white">
+
+            <h4>
+
+                📅 Recent Attendance
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Name</th>
+
+                        <th>Roll No</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% if recent_attendance %}
+
+                        {% for row in recent_attendance %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>{{ row.name }}</td>
+
+                            <td>{{ row.roll_no }}</td>
+
+                            <td>
+
+                                {% if row.status=="Present" %}
+
+                                    <span class="badge bg-success">
+
+                                        Present
+
+                                    </span>
+
+                                {% elif row.status=="Absent" %}
+
+                                    <span class="badge bg-danger">
+
+                                        Absent
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        Leave
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="4" class="text-center">
+
+                                No attendance record found.
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
