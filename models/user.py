@@ -1,248 +1,69 @@
-# ==========================================
-# Student Attendance Management System
-# User Model
-# ==========================================
-
-import sqlite3
-from werkzeug.security import (
-    generate_password_hash,
-    check_password_hash
-)
-
-from config import DATABASE
+from werkzeug.security import generate_password_hash, check_password_hash
+from models.db import db
 
 
-# ==========================================
-# Database Connection
-# ==========================================
+class User(db.Model):
 
-def get_connection():
+    __tablename__ = "users"
 
-    conn = sqlite3.connect(DATABASE)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
-    conn.row_factory = sqlite3.Row
+    name = db.Column(
+        db.String(100),
+        nullable=False
+    )
 
-    return conn
+    username = db.Column(
+        db.String(100),
+        unique=True,
+        nullable=False
+    )
 
+    email = db.Column(
+        db.String(120),
+        unique=True,
+        nullable=False
+    )
 
-# ==========================================
-# Register User
-# ==========================================
+    password = db.Column(
+        db.String(255),
+        nullable=False
+    )
+
 
 def register_user(name, username, email, password):
 
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    hashed_password = generate_password_hash(password)
-
-    cursor.execute("""
-
-    INSERT INTO users
-    (name, username, email, password)
-
-    VALUES (?,?,?,?)
-
-    """,
-
-    (
-
-        name,
-
-        username,
-
-        email,
-
-        hashed_password
-
+    user = User(
+        name=name,
+        username=username,
+        email=email,
+        password=generate_password_hash(password)
     )
 
-    )
-
-    conn.commit()
-
-    conn.close()
-
-
-# ==========================================
-# Login User
-# ==========================================
-
-def login_user(username, password):
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    cursor.execute(
-
-        "SELECT * FROM users WHERE username=?",
-
-        (username,)
-
-    )
-
-    user = cursor.fetchone()
-
-    conn.close()
-
-    if user:
-
-        if check_password_hash(
-
-            user["password"],
-
-            password
-
-        ):
-
-            return user
-
-    return None
-
-
-# ==========================================
-# Get User By Username
-# ==========================================
-
-def get_user(username):
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    cursor.execute(
-
-        "SELECT * FROM users WHERE username=?",
-
-        (username,)
-
-    )
-
-    user = cursor.fetchone()
-
-    conn.close()
+    db.session.add(user)
+    db.session.commit()
 
     return user
 
 
-# ==========================================
-# Update Profile
-# ==========================================
+def login_user(username, password):
 
-def update_profile(
+    user = User.query.filter_by(
+        username=username
+    ).first()
 
-        username,
+    if user and check_password_hash(
+        user.password,
+        password
+    ):
+        return user
 
-        name,
-
-        email
-
-):
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    cursor.execute("""
-
-    UPDATE users
-
-    SET
-
-    name=?,
-
-    email=?
-
-    WHERE username=?
-
-    """,
-
-    (
-
-        name,
-
-        email,
-
-        username
-
-    )
-
-    )
-
-    conn.commit()
-
-    conn.close()
+    return None
 
 
-# ==========================================
-# Change Password
-# ==========================================
+def get_user(user_id):
 
-def change_password(
-
-        username,
-
-        new_password
-
-):
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    hashed = generate_password_hash(
-
-        new_password
-
-    )
-
-    cursor.execute("""
-
-    UPDATE users
-
-    SET password=?
-
-    WHERE username=?
-
-    """,
-
-    (
-
-        hashed,
-
-        username
-
-    )
-
-    )
-
-    conn.commit()
-
-    conn.close()
-
-
-# ==========================================
-# Check Username Exists
-# ==========================================
-
-def username_exists(username):
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    cursor.execute(
-
-        "SELECT id FROM users WHERE username=?",
-
-        (username,)
-
-    )
-
-    user = cursor.fetchone()
-
-    conn.close()
-
-    return user is not None
+    return User.query.get(user_id)
