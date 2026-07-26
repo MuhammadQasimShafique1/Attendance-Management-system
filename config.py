@@ -1,88 +1,18 @@
-# ==========================================
-# Student Attendance Management System
-# Configuration File
-# ==========================================
-
 import os
+from dotenv import load_dotenv
 
-# ------------------------------------------
-# Base Directory
-# ------------------------------------------
+load_dotenv()
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-# ------------------------------------------
-# Secret Key
-# ------------------------------------------
+class Config:
 
-SECRET_KEY = "Qasim_Student_Attendance_2026"
+    SECRET_KEY = os.getenv(
+        "SECRET_KEY",
+        "student_attendance_secret_key"
+    )
 
-# ------------------------------------------
-# Database Location
-# ------------------------------------------
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        "DATABASE_URL"
+    )
 
-DATABASE = os.path.join(
-    BASE_DIR,
-    "instance",
-    "database.db"
-)
-
-# ------------------------------------------
-# Upload Folder
-# ------------------------------------------
-
-UPLOAD_FOLDER = os.path.join(
-    BASE_DIR,
-    "uploads",
-    "student_photos"
-)
-
-# ------------------------------------------
-# Allowed Image Extensions
-# ------------------------------------------
-
-ALLOWED_EXTENSIONS = {
-
-    "png",
-
-    "jpg",
-
-    "jpeg",
-
-    "gif"
-
-}
-
-# ------------------------------------------
-# Maximum Upload Size
-# ------------------------------------------
-
-MAX_CONTENT_LENGTH = 5 * 1024 * 1024
-
-# 5 MB
-
-# ------------------------------------------
-# Attendance Status
-# ------------------------------------------
-
-ATTENDANCE_STATUS = [
-
-    "Present",
-
-    "Absent",
-
-    "Leave"
-
-]
-
-# ------------------------------------------
-# Default Admin Account
-# ------------------------------------------
-
-DEFAULT_ADMIN = {
-
-    "username": "admin",
-
-    "password": "admin123"
-
-}
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
