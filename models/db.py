@@ -1,120 +1,12 @@
-# ==========================================
-# Student Attendance Management System
-# Database File
-# ==========================================
+from flask_sqlalchemy import SQLAlchemy
 
-import sqlite3
-from config import DATABASE
+db = SQLAlchemy()
 
 
-# ==========================================
-# Database Connection
-# ==========================================
+def init_db(app):
 
-def get_connection():
+    db.init_app(app)
 
-    conn = sqlite3.connect(DATABASE)
+    with app.app_context():
 
-    conn.row_factory = sqlite3.Row
-
-    return conn
-
-
-# ==========================================
-# Create Tables
-# ==========================================
-
-def create_tables():
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    # ======================================
-    # Users Table
-    # ======================================
-
-    cursor.execute("""
-
-    CREATE TABLE IF NOT EXISTS users(
-
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-        name TEXT NOT NULL,
-
-        username TEXT UNIQUE NOT NULL,
-
-        email TEXT UNIQUE,
-
-        password TEXT NOT NULL
-
-    )
-
-    """)
-
-    # ======================================
-    # Students Table
-    # ======================================
-
-    cursor.execute("""
-
-    CREATE TABLE IF NOT EXISTS students(
-
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-        name TEXT NOT NULL,
-
-        roll_no TEXT UNIQUE NOT NULL,
-
-        department TEXT,
-
-        semester TEXT,
-
-        email TEXT,
-
-        phone TEXT,
-
-        photo TEXT
-
-    )
-
-    """)
-
-    # ======================================
-    # Attendance Table
-    # ======================================
-
-    cursor.execute("""
-
-    CREATE TABLE IF NOT EXISTS attendance(
-
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-        student_id INTEGER,
-
-        attendance_date TEXT,
-
-        status TEXT,
-
-        FOREIGN KEY(student_id)
-
-        REFERENCES students(id)
-
-    )
-
-    """)
-
-    conn.commit()
-
-    conn.close()
-
-
-# ==========================================
-# Initialize Database
-# ==========================================
-
-if __name__ == "__main__":
-
-    create_tables()
-
-    print("Database Created Successfully.")
+        db.create_all()
