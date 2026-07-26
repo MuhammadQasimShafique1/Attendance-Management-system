@@ -1,0 +1,183 @@
+/*=========================================
+    LOGIN & REGISTER PAGE
+==========================================*/
+
+body{
+
+    background:linear-gradient(135deg,#0d6efd,#6610f2);
+
+    min-height:100vh;
+
+}
+
+/* Card */
+
+.card{
+
+    border:none;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    backdrop-filter:blur(10px);
+
+    animation:fadeIn 0.8s;
+
+}
+
+.card-body{
+
+    padding:40px;
+
+}
+
+/* Heading */
+
+.card h2{
+
+    font-weight:bold;
+
+    color:#0d6efd;
+
+}
+
+.card p{
+
+    color:#666;
+
+}
+
+/* Input */
+
+.form-control{
+
+    height:48px;
+
+    border-radius:10px;
+
+    border:1px solid #ced4da;
+
+    transition:0.3s;
+
+}
+
+.form-control:focus{
+
+    border-color:#0d6efd;
+
+    box-shadow:0 0 10px rgba(13,110,253,.3);
+
+}
+
+/* Label */
+
+.form-label{
+
+    font-weight:600;
+
+}
+
+/* Button */
+
+.btn{
+
+    height:48px;
+
+    border-radius:10px;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+.btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 20px rgba(0,0,0,.2);
+
+}
+
+/* Register Link */
+
+a{
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+}
+
+a:hover{
+
+    text-decoration:underline;
+
+}
+
+/* Divider */
+
+hr{
+
+    margin:25px 0;
+
+}
+
+/* Logo */
+
+.logo{
+
+    width:90px;
+
+    height:90px;
+
+    margin-bottom:15px;
+
+}
+
+/* Animation */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.card{
+
+margin:20px;
+
+}
+
+.card-body{
+
+padding:25px;
+
+}
+
+h2{
+
+font-size:28px;
+
+}
+
+}
