@@ -11,19 +11,13 @@ from flask import (
     request,
     redirect,
     url_for,
-    session,
-    flash
+    flash,
+    session
 )
 
-import sqlite3
+from config import Config
 
-from config import (
-    SECRET_KEY,
-    DATABASE,
-    UPLOAD_FOLDER
-)
-
-from models.db import create_tables
+from models.db import init_db
 
 from models.user import (
     register_user,
@@ -31,32 +25,31 @@ from models.user import (
 )
 
 from models.student import (
-    get_students,
-    add_student
-)
-from models.attendance import (
-    get_attendance,
-    get_student_report,
-    mark_attendance,
-    save_all_attendance
+    add_student,
+    get_students
 )
 
+from models.attendance import (
+    mark_attendance,
+    get_attendance,
+    get_student_report,
+    total_present,
+    total_absent,
+    total_leave
+)
+import os
+
+print(os.getenv("DATABASE_URL"))
 # ==========================================
 # Flask App
 # ==========================================
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = SECRET_KEY
+app.config.from_object(Config)
 
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+init_db(app)
 
-app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
-
-app.secret_key = SECRET_KEY
-
-# Create Database Tables
-create_tables()
 
 # ==========================================
 # Home Page
@@ -133,48 +126,65 @@ def register():
 @app.route("/dashboard")
 def dashboard():
 
-    if "username" not in session:
+    students = get_students()
 
-        return redirect("/login")
+    attendance = get_attendance()
 
     return render_template(
-        "dashboard.html",
-        username=session["username"]
-    )
 
+        "dashboard.html",
+
+        username=session.get("username"),
+
+        total_students=len(students),
+
+        present_today=total_present(),
+
+        absent_today=total_absent(),
+
+        leave_today=total_leave(),
+
+        recent_attendance=attendance[:10]
+    )
 # ==========================================
 # Students
 # ==========================================
 
-@app.route("/students", methods=["GET", "POST"])
+@app.route("/students", methods=["GET","POST"])
 def students():
-
-    if "username" not in session:
-
-        return redirect("/login")
 
     if request.method == "POST":
 
         add_student(
 
             request.form["name"],
+
             request.form["roll_no"],
+
             request.form["department"],
+
             request.form["semester"],
+
             request.form["email"],
+
             request.form["phone"]
 
         )
 
-        flash("Student Added Successfully", "success")
+        flash(
+            "Student Added Successfully",
+            "success"
+        )
 
-        return redirect("/students")
-
-    students = get_students()
+        return redirect(
+            url_for("students")
+        )
 
     return render_template(
+
         "students.html",
-        students=students
+
+        students=get_students()
     )
 
 # ==========================================
@@ -184,41 +194,45 @@ def students():
 @app.route("/attendance", methods=["GET", "POST"])
 def attendance():
 
-    if "username" not in session:
-        return redirect(url_for("login"))
-
     students = get_students()
 
     if request.method == "POST":
 
         attendance_date = request.form["attendance_date"]
 
-        save_all_attendance(
-            attendance_date,
-            students,
-            request.form
+        for student in students:
+
+            status = request.form.get(
+                f"status_{student.id}"
+            )
+
+            mark_attendance(
+                student.id,
+                attendance_date,
+                status
+            )
+
+        flash(
+            "Attendance Saved Successfully",
+            "success"
         )
 
-        flash("Attendance Saved Successfully!", "success")
-
-        return redirect(url_for("attendance"))
-
-    attendance = get_attendance()
+        return redirect(
+            url_for("attendance")
+        )
 
     return render_template(
+
         "attendance.html",
-        students=students,
-        attendance=attendance
+
+        students=students
     )
 # ==========================================
 # Report
 # ==========================================
 
-@app.route("/report", methods=["GET", "POST"])
+@app.route("/report", methods=["GET","POST"])
 def report():
-
-    if "username" not in session:
-        return redirect(url_for("login"))
 
     students = get_students()
 
@@ -226,15 +240,18 @@ def report():
 
     if request.method == "POST":
 
-        student_id = request.form.get("student_id")
+        student_id = request.form["student_id"]
 
-        if student_id:
-
-            attendance = get_student_report(student_id)
+        attendance = get_student_report(
+            student_id
+        )
 
     return render_template(
+
         "report.html",
+
         students=students,
+
         attendance=attendance
     )
 
